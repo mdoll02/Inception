@@ -1,7 +1,12 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update && apt-get upgrade -y &&  \
+    apt-get install -y nginx openssl &&  \
+    apt-get clean
 
-# Install nginx requirements
+COPY ./tools/init.sh /
+COPY ./conf/nginx.conf /
 
-RUN apt-get clean
+RUN chmod +x /init.sh
+
+CMD ["/init.sh"]
