@@ -6,6 +6,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -out /etc/ssl/certs/nginx.crt \
   -subj $SUBJ
 
-envsubset '$DOMAIN_NAME' < /nginx.conf > /etc/nginx/conf.d/default.conf
+envsubst '$DOMAIN_NAME' < /nginx.conf > /etc/nginx/conf.d/default.conf
 
 nginx -g 'daemon off;'
