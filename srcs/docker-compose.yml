@@ -1,0 +1,70 @@
+version: '2.22.0'
+
+networks:
+  inception:
+    name: Inception
+
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    build:
+      context: ./requirements/nginx/
+      dockerfile: ./Dockerfile
+    ports:
+      - "443:443"
+    networks:
+      - inception
+    depends_on:
+        - wordpress
+    volumes:
+        - wordpress_data:/var/www/html
+    env_file:
+      - .env
+
+  wordpress:
+   image: wordpress
+   container_name: wordpress
+   restart: always
+   build:
+     context: ./requirements/wordpress/
+     dockerfile: ./Dockerfile
+   networks:
+    - inception
+   depends_on:
+    - mariadb
+   volumes:
+    - wordpress_data:/var/www/html
+   env_file:
+     - .env
+
+  mariadb:
+   image: mariadb
+   container_name: mariadb
+   restart: always
+   build:
+      context: ./requirements/mariadb/
+      dockerfile: ./Dockerfile
+   networks:
+     - inception
+   volumes:
+        - mariadb_data:/var/lib/mysql
+   env_file:
+     - .env
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${LOGIN_NAME}/data/mariadb
+      #device: /Users/${LOGIN_NAME}/data/mariadb
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${LOGIN_NAME}/data/wordpress
+      #device: /Users/${LOGIN_NAME}/data/wordpress
