@@ -11,5 +11,11 @@ up:
 	fi
 
 
-clean:
+stop:
 	docker-compose -f ./srcs/docker-compose.yml down -v
+
+fclean: stop
+	docker builder prune -f
+
+cclean: fclean
+	docker system prune -f
