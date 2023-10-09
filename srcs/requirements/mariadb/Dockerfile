@@ -1,7 +1,11 @@
-FROM debian:buster
+FROM debian:stable-slim
 
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update && apt-get upgrade -y &&  \
+    apt-get install mariadb-server -y &&  \
+    apt-get clean
 
-# Install mariadb requirements
+COPY ./tools/init.sh /
 
-RUN apt-get clean
+RUN chmod +x /init.sh
+
+CMD ["/init.sh"]
