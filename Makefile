@@ -12,6 +12,8 @@ BOLD="\033[1m"
 ITALIC="\033[3m"
 UNDERLINE="\033[4m"
 
+include ./srcs/.env
+
 all: up
 
 up:
@@ -29,11 +31,11 @@ stop:
 	@echo $(YELLOW) "Stopping containers..." $(END)
 	docker-compose -f ./srcs/docker-compose.yml down -v
 
-fclean: stop
+fclean: clean
 	@echo $(YELLOW) "Removing caches ..." $(END)
 	docker builder prune -f
 
-cclean: fclean
+cclean: clean
 	@echo $(YELLOW) "Removing all unused containers, networks, images and volumes ..." $(END)
 	docker system prune -f
 
