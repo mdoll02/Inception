@@ -14,6 +14,14 @@ UNDERLINE="\033[4m"
 
 include ./srcs/.env
 
+OS := $(shell uname)
+
+ifeq ($(OS), Darwin)
+	DOCKER_COMPOSE=docker-compose
+else
+	DOCKER_COMPOSE=docker compose
+endif
+
 all: up
 
 up:
@@ -21,7 +29,7 @@ up:
 		echo $(RED) $(BOLD) $(ITALIC) "\".env\" file is not existing, please add a .env file in ./srcs/" $(END); \
 	else \
 	  	echo $(GREEN) "Starting containers..." $(END); \
-		docker-compose -f ./srcs/docker-compose.yml up -d --build; \
+		$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml up -d --build; \
 	fi
 
 
@@ -29,7 +37,7 @@ clean: stop
 
 stop:
 	@echo $(YELLOW) "Stopping containers..." $(END)
-	docker-compose -f ./srcs/docker-compose.yml down -v
+	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml down -v
 
 fclean: clean
 	@echo $(YELLOW) "Removing caches ..." $(END)
@@ -39,6 +47,6 @@ cclean: clean
 	@echo $(YELLOW) "Removing all unused containers, networks, images and volumes ..." $(END)
 	docker system prune -f
 
-re: fclean all
+re: clean all
 
 .PHONY: all up clean stop fclean cclean re
