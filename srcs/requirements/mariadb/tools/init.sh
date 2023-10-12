@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mysql --user=mysql --init-file=/dbinit.sql
+mysql --user=mysql < /dbinit.sql
