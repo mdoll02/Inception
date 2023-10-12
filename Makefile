@@ -49,4 +49,8 @@ cclean: clean
 
 re: clean all
 
-.PHONY: all up clean stop fclean cclean re
+logs:
+	@echo $(YELLOW) "Showing logs..." $(END)
+	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml logs -f
+
+.PHONY: all up clean stop fclean cclean re logs
