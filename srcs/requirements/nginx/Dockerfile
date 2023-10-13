@@ -5,7 +5,7 @@ RUN apt-get update && apt-get upgrade -y &&  \
     apt-get clean
 
 COPY ./tools/init.sh /
-COPY ./conf/nginx.conf /
+COPY ./conf/nginx.conf /etc/nginx/sites-available/default
 
 RUN chmod +x /init.sh
 
