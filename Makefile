@@ -34,20 +34,29 @@ up:
 
 stop:
 	@echo $(YELLOW) "Stopping containers..." $(END)
+	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml stop
+
+start:
+	@echo $(YELLOW) "Starting containers..." $(END)
+	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml start
+
+down:
+	@echo $(YELLOW) "Stopping containers..." $(END)
 	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml down -v
 
-fclean: stop
+fclean: down
 	@echo $(YELLOW) "Removing caches ..." $(END)
 	docker builder prune -f
 
-cclean: stop
+cclean: down
 	@echo $(YELLOW) "Removing all unused containers, networks, images and volumes ..." $(END)
 	docker system prune -f
 
-re: stop all
+re: down all
 
 logs:
 	@echo $(YELLOW) "Showing logs..." $(END)
-	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml logs -f
+	rm -f logs.log
+	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml logs -f > logs.log
 
-.PHONY: all up clean stop fclean cclean re logs
+.PHONY: all up stop start down fclean cclean re logs
