@@ -29,7 +29,7 @@ up:
 		echo $(RED) $(BOLD) $(ITALIC) "\".env\" file is not existing, please add a .env file in ./srcs/" $(END); \
 	else \
 	  	echo $(GREEN) "Starting containers..." $(END); \
-		$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml up -d --build; \
+		$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml up -d --build --no-chache; \
 	fi
 
 stop:
