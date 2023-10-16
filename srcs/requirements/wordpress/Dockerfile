@@ -4,6 +4,7 @@ RUN apt-get update && apt-get upgrade -y
 
 # Install wordpress requirements
 RUN apt install php-fpm php-mysql -y
+RUN apt install wget  -y
 
 RUN apt-get clean
 
