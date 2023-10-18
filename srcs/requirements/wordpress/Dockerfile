@@ -8,8 +8,8 @@ RUN apt install wget  -y
 
 RUN apt-get clean
 
-COPY ./tools/init.sh /
-COPY ./conf/www.conf /
+COPY ./conf/init.sh /
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
 RUN chmod +x /init.sh
 
