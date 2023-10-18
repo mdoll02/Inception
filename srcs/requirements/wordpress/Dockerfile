@@ -9,7 +9,7 @@ RUN apt install wget  -y
 RUN apt-get clean
 
 COPY ./tools/init.sh /
-COPY ./conf/wp-config.php /
+COPY ./conf/www.conf /
 
 RUN chmod +x /init.sh
 
