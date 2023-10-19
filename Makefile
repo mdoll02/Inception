@@ -29,7 +29,7 @@ up:
 		echo $(RED) $(BOLD) $(ITALIC) "\".env\" file is not existing, please add a .env file in ./srcs/" $(END); \
 	else \
 	  	echo $(GREEN) "Starting containers..." $(END); \
-	  	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml build --no-cache; \
+	  	$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml build; \
 		$(DOCKER_COMPOSE) -f ./srcs/docker-compose.yml up -d; \
 	fi
 
@@ -51,7 +51,7 @@ fclean: down
 
 cclean: down
 	@echo $(YELLOW) "Removing all unused containers, networks, images and volumes ..." $(END)
-	docker system prune -f
+	docker system prune --all -f
 
 re: down all
 
