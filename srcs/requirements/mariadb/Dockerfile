@@ -4,13 +4,15 @@ RUN apt-get update && apt-get upgrade -y &&  \
     apt-get install mariadb-server -y &&  \
     apt-get clean
 
+RUN mkdir -p /var/run/mysqld
+RUN chown -R mysql:mysql /var/run/mysqld
+
 COPY ./tools/init.sh /
-COPY ./conf/50-server.cnf /etc/mysql/my.cnf
+RUN rm -rf /etc/mysql/my.cnf
+COPY ./conf/my.cnf /etc/
 
 EXPOSE 3306
 
 RUN chmod +x /init.sh
-
-RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
 
 CMD ["/init.sh"]
