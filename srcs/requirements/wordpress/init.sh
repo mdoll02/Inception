@@ -26,10 +26,4 @@ sed -i "s/localhost/$WP_DB_HOST/g" wp-config-sample.php
 sed -i "s/database_name_here/$WP_DB_NAME/g" wp-config-sample.php
 mv wp-config-sample.php wp-config.php
 
-echo "------debug------"
-
-ls /etc/php -alR
-
-echo "------debug------"
-
-service php7.3-fpm restart
+/usr/sbin/php-fpm7.3 -F
