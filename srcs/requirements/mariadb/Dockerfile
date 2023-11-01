@@ -1,17 +1,14 @@
 FROM debian:buster
 
-RUN apt-get update && apt-get upgrade && apt-get -y install mariadb-server mariadb-client && apt-get clean && rm -rf /var/lib/apt/lists/* \
-&& mkdir -p /var/run/mysqld \
-&& chown -R mysql:mysql /var/run/mysqld \
-&& chmod 777 /var/run/mysqld
+RUN apt-get update -y && apt-get install mariadb-server -y
+
+RUN mkdir -p /var/run/mysqld && chown -R mysql:mysql /var/lib/mysql && chmod 777 /var/run/mysqld
+
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
+
+COPY ./tools/init_db.sh /
+RUN chmod +x /init_db.sh
 
 EXPOSE 3306
 
-COPY ./tools/init_db.sh /usr/local/bin/
-COPY ./conf/wordpress.sql /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/init_db.sh
-
-ENTRYPOINT ["init_db.sh"]
-
-CMD ["mysqld", "--bind-address=0.0.0.0"]
+CMD ["/init_db.sh"]

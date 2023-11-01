@@ -1,40 +1,33 @@
-#!/bin/sh
+#!/bin/bash
 
-mysql_install_db
+# Initialize the MariaDB server
+mysql_install_db --user=mysql --ldata=/var/lib/mysql || { echo "MariaDB initialization failed"; exit 1; }
 
-/etc/init.d/mysql start
+# Start the MariaDB service
+service mysql start || { echo "MariaDB service start failed"; exit 1; }
 
-if [ -d "/var/lib/mysql/$DB_NAME" ]
-then 
+# Create a temporary SQL file to set the root password
+cat <<EOF > /tmp/sqlfile.sql
+UPDATE mysql.user SET Password=PASSWORD('$ROOT_PASSWORD') WHERE User='root';
+FLUSH PRIVILEGES;
+EOF
 
-	echo "Database already exists"
-else
+# Run SQL file to set the root password
+mysql < /tmp/sqlfile.sql || { echo "Root password change failed"; exit 1; }
 
-# enforce root password
+# Remove the temporary SQL file
+rm -f /tmp/sqlfile.sql
 
-mysql_secure_installation <<_EOF_
+# Create the database
+echo "CREATE DATABASE IF NOT EXISTS $DB_NAME;" | mysql -u root || { echo "Database creation failed"; exit 1; }
 
-Y
-1234
-1234
-Y
-n
-Y
-Y
-_EOF_
+# Create the user and grant privileges
+echo "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';" | mysql -u root || { echo "User creation failed"; exit 1; }
+echo "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';" | mysql -u root || { echo "Privilege grant failed"; exit 1; }
+echo "FLUSH PRIVILEGES;" | mysql -u root || { echo "Flush privileges failed"; exit 1; }
 
-#Add a root user on lcalhost
+# Stop the MariaDB service
+service mysql stop || { echo "MariaDB service stop failed"; exit 1; }
 
-	echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$ROOT_PASSWORD'; FLUSH PRIVILEGES;" | mysql -uroot
-
-#Create database and user for wordpress
-	echo "CREATE DATABASE IF NOT EXISTS $DB_NAME; GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD'; FLUSH PRIVILEGES;" | mysql -uroot
-
-#Import database
-mysql -uroot -p$ROOT_PASSWORD $DB_NAME < /usr/local/bin/wordpress.sql
-
-fi
-
-/etc/init.d/mysql stop
-
-exec "$@"
+# Start MariaDB without binding to all interfaces
+mysqld
