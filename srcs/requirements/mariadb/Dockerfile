@@ -9,6 +9,4 @@ COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY ./tools/init_db.sh /
 RUN chmod +x /init_db.sh
 
-EXPOSE 3306
-
 CMD ["/init_db.sh"]

@@ -25,6 +25,4 @@ COPY ./www.conf /etc/php/7.3/fpm/pool.d/
 
 RUN chmod +x /init_wp.sh
 
-EXPOSE 9000
-
 CMD [ "/init_wp.sh" ]
