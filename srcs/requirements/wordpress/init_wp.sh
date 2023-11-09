@@ -12,15 +12,12 @@ then
 
 	echo "Wordpress already exists"
 else
-	#Download wordpress
 	
 	cd /var/www/html
 	rm -rf *
 	wget https://wordpress.org/latest.tar.gz > /dev/null 2>&1
 	tar -xzvf latest.tar.gz > /dev/null 2>&1
 	rm -rf latest.tar.gz
-	
-	#Inport env variables in the config file
 	
 	chmod 755 -R /var/www/html/wordpress
 	chown -R www-data:www-data /var/www/html/wordpress
